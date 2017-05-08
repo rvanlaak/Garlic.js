@@ -140,7 +140,12 @@
       if ( this.options.expires ) {
         this.storage.set( this.expiresFlag , ( new Date().getTime() + this.options.expires * 1000 ).toString() );
       }
-
+      
+      var prePersistValue = this.options.prePersist(this.$element, this.getVal());
+      if (typeof prePersistValue != 'false') {
+        this.val = prePersistValue;
+      } 
+      
       this.storage.set( this.path , this.getVal() );
 
       this.options.onPersist(this.$element, this.getVal());
@@ -444,6 +449,7 @@
     }
    , getPath: function ( $item ) {}                                                                         // Set your own key-storing strategy per field
    , onRetrieve: function ( $item, storedVal ) {}                                                           // This function will be triggered each time Garlic find an retrieve a local stored data for a field
+   , prePersist: function ( $item, storedVal ) { return false; }                                            // This function will be triggered before Garlic, and allows to override the value stored to local storage
    , onPersist: function ( $item, storedVal ) {}                                                            // This function will be triggered each time Garlic stores a field to local storage
    , onSwap: function ( $item, prevValue, curValue ) {}                                                     // This function will be triggered each time Garlic swap values with conflict manager
   }
